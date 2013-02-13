@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Timeline</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    
+    <string name="receive_call_message">You answered call from {NAME} ({NUMBER}) at {DATE}</string>
+    <string name="make_call_message">You make a call to {NAME} ({NUMBER}) at {DATE}</string>
+	<string name="missed_call_message">You missed a call from {NAME} ({NUMBER}) at {DATE}</string>
+	<string name="sms_receive_message">You receive new sms from {NAME} ({NUMBER}) at {DATE}</string>
+	<string name="sms_sent_message">You have sent sms to {NAME} ({NUMBER}) at {DATE}</string>
+	<string name="play_installed_app">You have installed \'{APPNAME}\' from Google Play at {DATE}</string>
+	<string name="unknown_contact">Unknown</string>
+    <string name="content_description_category">Category</string>
+    <string name="content_description_call">Call</string>
+</resources>
