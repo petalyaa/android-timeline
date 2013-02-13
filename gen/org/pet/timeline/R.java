@@ -57,6 +57,7 @@ public final class R {
         public static final int receive_call_message=0x7f040003;
         public static final int sms_receive_message=0x7f040006;
         public static final int sms_sent_message=0x7f040007;
+        public static final int text_placeholder=0x7f04000e;
         public static final int unknown_contact=0x7f040009;
     }
     public static final class style {

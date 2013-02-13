@@ -9,10 +9,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="15dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp"
         android:paddingTop="15dp"
-        android:text="This is a test"
+        android:text="@string/text_placeholder"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

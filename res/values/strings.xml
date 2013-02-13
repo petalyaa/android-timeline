@@ -16,6 +16,7 @@
     <string name="button_cancel">Cancel</string>
     <string name="button_ok">OK</string>
     <string name="content_description_call">Call</string>
+    <string name="text_placeholder">Placeholder</string>
     <string-array name="messaging_popup_items">
         <item>View sms</item>
 		<item>Reply sms</item>

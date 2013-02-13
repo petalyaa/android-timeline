@@ -70,21 +70,24 @@ public class MainActivity extends Activity {
 				
 				View selectionView = inflater.inflate(R.layout.history_items_popup, null, false);
 				ListView listView = (ListView) selectionView.findViewById(R.id.histortPopupListItem);
-				
+				PopupItemHandler rawItemHandler = null;
 				String[] rawItems = null;
 				switch(data.getType()) {
 				case CALL : 
 					rawItems = getResources().getStringArray(R.array.call_popup_items);
+					rawItemHandler = new CallPopupItemsHandler(newContext);
 					break;
 				case PLAY :
 					rawItems = getResources().getStringArray(R.array.application_popup_items);
+					rawItemHandler = new ApplicationPopupItemHandler(newContext);
 					break;
 				case SMS :
 					rawItems = getResources().getStringArray(R.array.messaging_popup_items);
+					rawItemHandler = new SmsPopupItemHandler(newContext);
 					break;
 				}
 				final String[] items = rawItems;
-				
+				final PopupItemHandler itemHandler = rawItemHandler;
 				if(rawItems != null) {
 					SimpleTextAdapter adapter = new SimpleTextAdapter(newContext, rawItems, data);
 					listView.setAdapter(adapter);
@@ -98,6 +101,9 @@ public class MainActivity extends Activity {
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						Log.v(TAG, "You have selected option " + items[position]);
 						dialog.dismiss();
+						if(itemHandler != null) {
+							itemHandler.performAction(position);
+						}
 					}
 					
 				});
