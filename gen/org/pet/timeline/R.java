@@ -36,7 +36,9 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f040000;
-        public static final int content_description_call=0x7f04000b;
+        public static final int button_cancel=0x7f04000b;
+        public static final int button_ok=0x7f04000c;
+        public static final int content_description_call=0x7f04000d;
         public static final int content_description_category=0x7f04000a;
         public static final int hello_world=0x7f040001;
         public static final int make_call_message=0x7f040004;

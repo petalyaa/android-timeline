@@ -13,5 +13,7 @@
 	<string name="play_installed_app">You have installed \'{APPNAME}\' from Google Play at {DATE}</string>
 	<string name="unknown_contact">Unknown</string>
     <string name="content_description_category">Category</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_ok">OK</string>
     <string name="content_description_call">Call</string>
 </resources>

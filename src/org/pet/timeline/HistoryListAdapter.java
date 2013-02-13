@@ -2,8 +2,13 @@ package org.pet.timeline;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -18,8 +23,11 @@ public class HistoryListAdapter extends BaseAdapter {
 	
 	private LayoutInflater inflater;
 	
+	private final Context context;
+	
 	public HistoryListAdapter(Context context, ArrayList<HistoryData> data){
 		this.data = data;
+		this.context = context;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
@@ -39,7 +47,7 @@ public class HistoryListAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup viewGroup) {
+	public View getView(final int position, View convertView, ViewGroup viewGroup) {
 		View view = inflater.inflate(R.layout.history_item, viewGroup, false);
 		ImageView categoryImageView = (ImageView) view.findViewById(R.id.historyCategoryImage);
 		TextView dataTextView = (TextView) view.findViewById(R.id.historyDataText);
@@ -48,6 +56,7 @@ public class HistoryListAdapter extends BaseAdapter {
 		if(data.getAppIcon() != null) {
 			categoryImageView.setImageDrawable(data.getAppIcon());
 		}
+		
 		dataTextView.setText(data.getText());
 		return view;
 	}

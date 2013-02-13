@@ -18,13 +18,18 @@ import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.PhoneLookup;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
@@ -37,16 +42,31 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
 		ArrayList<HistoryData> historyData = new ArrayList<HistoryData>();
 		historyData = getPhoneCallHistory(historyData); // Get phone history from android
 		historyData = getReceivedSmsHistory(historyData); // Get receive sms history from android
 		historyData = getSentSmsHistory(historyData); // Get sent sms history from android
 		historyData = getInstalledMarketApp(historyData); // Get application installed from google play
 		Collections.sort(historyData);
-		
+		final Context newContext = this;
 		HistoryListAdapter historyListAdapter = new HistoryListAdapter(getApplicationContext(), historyData);
 		ListView listView = (ListView) findViewById(R.id.listView);
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				AlertDialog dialog = new AlertDialog.Builder(newContext).create();
+				dialog.setTitle("Test");
+				dialog.setMessage("Testing message");
+				dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				dialog.show();
+			}
+		});
 		listView.setAdapter(historyListAdapter);
 	}
 	
