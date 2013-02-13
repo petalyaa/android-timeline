@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.PhoneLookup;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -42,7 +43,13 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayShowHomeEnabled(false);
+		actionBar.setDisplayShowTitleEnabled(false);
+		
 		setContentView(R.layout.activity_main);
+		
 		final ArrayList<HistoryData> historyData = new ArrayList<HistoryData>();
 		getPhoneCallHistory(historyData); // Get phone history from android
 		getReceivedSmsHistory(historyData); // Get receive sms history from android
