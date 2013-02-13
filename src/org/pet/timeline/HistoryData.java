@@ -7,7 +7,18 @@ import android.graphics.drawable.Drawable;
 public class HistoryData implements Comparable<HistoryData> {
 
 	public enum DataType {
-		CALL, SMS, PLAY
+		
+		CALL("Call"), SMS("Messaging"), PLAY("Application");
+		
+		private String value;
+		
+		private DataType(String value) {
+			this.value = value;
+		}
+		
+		public String getValue() {
+			return this.value;
+		}
 	};
 	
 	public enum CallType {
@@ -19,6 +30,8 @@ public class HistoryData implements Comparable<HistoryData> {
 	private Drawable appIcon;
 
 	private String text;
+	
+	private String name;
 
 	private Timestamp timestamp;
 	
@@ -85,6 +98,14 @@ public class HistoryData implements Comparable<HistoryData> {
 
 	public void setAppIcon(Drawable appIcon) {
 		this.appIcon = appIcon;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

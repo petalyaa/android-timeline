@@ -27,6 +27,7 @@ import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,22 +43,59 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		ArrayList<HistoryData> historyData = new ArrayList<HistoryData>();
-		historyData = getPhoneCallHistory(historyData); // Get phone history from android
-		historyData = getReceivedSmsHistory(historyData); // Get receive sms history from android
-		historyData = getSentSmsHistory(historyData); // Get sent sms history from android
-		historyData = getInstalledMarketApp(historyData); // Get application installed from google play
+		final ArrayList<HistoryData> historyData = new ArrayList<HistoryData>();
+		getPhoneCallHistory(historyData); // Get phone history from android
+		getReceivedSmsHistory(historyData); // Get receive sms history from android
+		getSentSmsHistory(historyData); // Get sent sms history from android
+		getInstalledMarketApp(historyData); // Get application installed from google play
 		Collections.sort(historyData);
 		final Context newContext = this;
+		final LayoutInflater inflater = (LayoutInflater) newContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
 		HistoryListAdapter historyListAdapter = new HistoryListAdapter(getApplicationContext(), historyData);
 		ListView listView = (ListView) findViewById(R.id.listView);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				AlertDialog dialog = new AlertDialog.Builder(newContext).create();
-				dialog.setTitle("Test");
-				dialog.setMessage("Testing message");
-				dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+				HistoryData data = historyData.get(position);
+				final AlertDialog dialog = new AlertDialog.Builder(newContext).create();
+				dialog.setTitle(data.getType().getValue());
+//				dialog.setMessage("Testing message");
+				
+				View selectionView = inflater.inflate(R.layout.history_items_popup, null, false);
+				ListView listView = (ListView) selectionView.findViewById(R.id.histortPopupListItem);
+				
+				String[] rawItems = null;
+				switch(data.getType()) {
+				case CALL : 
+					rawItems = getResources().getStringArray(R.array.call_popup_items);
+					break;
+				case PLAY :
+					rawItems = getResources().getStringArray(R.array.application_popup_items);
+					break;
+				case SMS :
+					rawItems = getResources().getStringArray(R.array.messaging_popup_items);
+					break;
+				}
+				final String[] items = rawItems;
+				
+				if(rawItems != null) {
+					SimpleTextAdapter adapter = new SimpleTextAdapter(newContext, rawItems, data);
+					listView.setAdapter(adapter);
+				}
+				
+				dialog.setView(selectionView, 2, 2, 2, 2);
+				
+				listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						Log.v(TAG, "You have selected option " + items[position]);
+						dialog.dismiss();
+					}
+					
+				});
+				
+				dialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
 					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -90,6 +128,7 @@ public class MainActivity extends Activity {
 	        String text = StringUtil.getString(getApplicationContext(), R.string.play_installed_app, replacement);
 	        data.setText(text);
 	        data.setAppIcon(icon);
+	        data.setName(appName);
 	        data.setType(DataType.PLAY);
 	        data.setTimestamp(dateInstalled);
 	        list.add(data);
@@ -120,6 +159,7 @@ public class MainActivity extends Activity {
 			data.setType(DataType.SMS);
 			data.setImageId(R.drawable.sms);
 			data.setText(text);
+			data.setName(toName);
 			data.setTimestamp(dateSent);
 			list.add(data);
 			cursor.moveToNext();
@@ -150,6 +190,7 @@ public class MainActivity extends Activity {
 			replacement.put("date", dateTimeAction);
 			String text = StringUtil.getString(getApplicationContext(), R.string.sms_receive_message, replacement);
 			data.setText(text);
+			data.setName(newFromPerson);
 			data.setTimestamp(new Timestamp(Long.parseLong(dateStr)));
 			list.add(data);
 			cursor.moveToNext();
@@ -209,6 +250,7 @@ public class MainActivity extends Activity {
 				data.setImageId(R.drawable.sym_call_outgoing);
 			}
 			data.setText(sb.toString());
+			data.setName(cacheName);
 			data.setTimestamp(new Timestamp(Long.parseLong(dateStr)));
 			list.add(data);
 		    mCallCursor.moveToNext();
