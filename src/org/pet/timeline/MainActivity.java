@@ -20,11 +20,14 @@ import android.provider.ContactsContract.PhoneLookup;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -151,6 +154,18 @@ public class MainActivity extends Activity {
 					timeTextView.setText(timeStr);
 					messageBody.setText(data.getSmsBody());
 					break;
+				case PLAY :
+//					Intent intent = new Intent("android.intent.action.MAIN");
+//					ComponentName component = new ComponentName(data.getPackageName(), data.getClassName());
+//					intent.setComponent(component);
+//				    intent.addCategory("android.intent.category.LAUNCHER");
+//				    startActivity(intent);
+					Intent i = new Intent();
+					PackageManager manager = getPackageManager();
+					i = manager.getLaunchIntentForPackage(data.getPackageName());
+					i.addCategory(Intent.CATEGORY_LAUNCHER);
+					startActivity(i);
+					break;
 				}
 				if(selectionView != null) {
 					dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close", new DialogInterface.OnClickListener() {
@@ -180,6 +195,8 @@ public class MainActivity extends Activity {
 	        }
 	        HistoryData data = new HistoryData();
 	        String appName = p.applicationInfo.loadLabel(getPackageManager()).toString();
+	        String packageName = p.applicationInfo.packageName;
+	        String className = p.applicationInfo.className;
 	        Timestamp dateInstalled = new Timestamp(p.firstInstallTime);
 	        Drawable icon = p.applicationInfo.loadIcon(getPackageManager());
 	        String dateInstalledStr = DATE_TIME_FORMAT.format(dateInstalled);
@@ -189,6 +206,8 @@ public class MainActivity extends Activity {
 	        replacement.put("date", dateInstalledStr);
 	        String text = StringUtil.getString(getApplicationContext(), R.string.play_installed_app, replacement);
 	        data.setText(text);
+	        data.setPackageName(packageName);
+	        data.setClassName(className);
 	        data.setAppIcon(icon);
 	        data.setName(appName);
 	        data.setType(DataType.PLAY);

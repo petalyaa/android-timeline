@@ -32,6 +32,10 @@ public class HistoryData implements Comparable<HistoryData> {
 	private String text;
 	
 	private String name;
+	
+	private String packageName;
+	
+	private String className;
 
 	private Timestamp timestamp;
 	
@@ -116,6 +120,22 @@ public class HistoryData implements Comparable<HistoryData> {
 
 	public void setSmsBody(String smsBody) {
 		this.smsBody = smsBody;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
 	}
 
 }
