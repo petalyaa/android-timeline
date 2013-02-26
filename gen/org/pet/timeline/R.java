@@ -27,18 +27,28 @@ public final class R {
         public static final int sym_call_outgoing=0x7f020008;
     }
     public static final class id {
+        public static final int RelativeLayout1=0x7f080005;
+        public static final int date_text_view=0x7f08000d;
         public static final int histortPopupListItem=0x7f080003;
         public static final int historyCategoryImage=0x7f080001;
         public static final int historyDataText=0x7f080002;
         public static final int listView=0x7f080000;
-        public static final int menu_settings=0x7f080005;
+        public static final int menu_settings=0x7f08000e;
+        public static final int message_text_view=0x7f08000a;
         public static final int simple_text_view=0x7f080004;
+        public static final int sms_content_label=0x7f08000b;
+        public static final int textView1=0x7f080006;
+        public static final int textView2=0x7f080007;
+        public static final int textView4=0x7f080009;
+        public static final int textView5=0x7f080008;
+        public static final int time_text_view=0x7f08000c;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int history_item=0x7f030001;
         public static final int history_items_popup=0x7f030002;
         public static final int simple_text_view=0x7f030003;
+        public static final int sms_popup_view=0x7f030004;
     }
     public static final class menu {
         public static final int activity_main=0x7f070000;
@@ -49,15 +59,19 @@ public final class R {
         public static final int button_ok=0x7f04000c;
         public static final int content_description_call=0x7f04000d;
         public static final int content_description_category=0x7f04000a;
+        public static final int date=0x7f040010;
         public static final int hello_world=0x7f040001;
         public static final int make_call_message=0x7f040004;
         public static final int menu_settings=0x7f040002;
         public static final int missed_call_message=0x7f040005;
         public static final int play_installed_app=0x7f040008;
         public static final int receive_call_message=0x7f040003;
+        public static final int separator=0x7f04000f;
+        public static final int sms_content_label=0x7f04000e;
         public static final int sms_receive_message=0x7f040006;
         public static final int sms_sent_message=0x7f040007;
-        public static final int text_placeholder=0x7f04000e;
+        public static final int text_placeholder=0x7f040012;
+        public static final int time=0x7f040011;
         public static final int unknown_contact=0x7f040009;
     }
     public static final class style {

@@ -35,6 +35,8 @@ public class HistoryData implements Comparable<HistoryData> {
 
 	private Timestamp timestamp;
 	
+	private String smsBody;
+	
 	private DataType type;
 	
 	private CallType callType;
@@ -106,6 +108,14 @@ public class HistoryData implements Comparable<HistoryData> {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getSmsBody() {
+		return smsBody;
+	}
+
+	public void setSmsBody(String smsBody) {
+		this.smsBody = smsBody;
 	}
 
 }

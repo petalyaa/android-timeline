@@ -33,12 +33,21 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	
 	private static final String TAG = MainActivity.class.getCanonicalName();
 	
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss", Locale.US);
+	private static final String DATE_FORMAT_STRING = "dd/MM/yyyy";
+	
+	private static final String TIME_FORMAT_STRING = "hh:mm:ss";
+	
+	private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat(DATE_FORMAT_STRING + " " + TIME_FORMAT_STRING, Locale.US);
+	
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_STRING, Locale.US);
+	
+	private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat(TIME_FORMAT_STRING, Locale.US);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +69,13 @@ public class MainActivity extends Activity {
 		final LayoutInflater inflater = (LayoutInflater) newContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
 		HistoryListAdapter historyListAdapter = new HistoryListAdapter(getApplicationContext(), historyData);
 		ListView listView = (ListView) findViewById(R.id.listView);
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				HistoryData data = historyData.get(position);
 				final AlertDialog dialog = new AlertDialog.Builder(newContext).create();
 				dialog.setTitle(data.getType().getValue());
-//				dialog.setMessage("Testing message");
 				
 				View selectionView = inflater.inflate(R.layout.history_items_popup, null, false);
 				ListView listView = (ListView) selectionView.findViewById(R.id.histortPopupListItem);
@@ -116,6 +125,46 @@ public class MainActivity extends Activity {
 					}
 				});
 				dialog.show();
+				return false;
+			}
+		
+		});
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				HistoryData data = historyData.get(position);
+				DataType type = data.getType();
+				final AlertDialog dialog = new AlertDialog.Builder(newContext).create();
+				View selectionView = null;
+				switch(type) {
+				case SMS :
+					// Open dialog sms_popup_view.xml
+					dialog.setTitle(type.getValue());
+					selectionView = inflater.inflate(R.layout.sms_popup_view, null, false);
+					TextView dateTextView = (TextView) selectionView.findViewById(R.id.date_text_view);
+					TextView timeTextView = (TextView) selectionView.findViewById(R.id.time_text_view);
+					TextView messageBody = (TextView) selectionView.findViewById(R.id.message_text_view);
+					Timestamp timestamp = data.getTimestamp();
+					String dateStr = DATE_FORMAT.format(timestamp);
+					String timeStr = TIME_FORMAT.format(timestamp);
+					dateTextView.setText(dateStr);
+					timeTextView.setText(timeStr);
+					messageBody.setText(data.getSmsBody());
+					break;
+				}
+				if(selectionView != null) {
+					dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Close", new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+					
+					dialog.setCanceledOnTouchOutside(false);
+					dialog.setView(selectionView, 2, 2, 2, 2);
+					dialog.show();
+				}
 			}
 		});
 		listView.setAdapter(historyListAdapter);
@@ -133,7 +182,7 @@ public class MainActivity extends Activity {
 	        String appName = p.applicationInfo.loadLabel(getPackageManager()).toString();
 	        Timestamp dateInstalled = new Timestamp(p.firstInstallTime);
 	        Drawable icon = p.applicationInfo.loadIcon(getPackageManager());
-	        String dateInstalledStr = sdf.format(dateInstalled);
+	        String dateInstalledStr = DATE_TIME_FORMAT.format(dateInstalled);
 	        
 	        Map<String, String> replacement = new HashMap<String, String>();
 	        replacement.put("appname", appName);
@@ -158,8 +207,9 @@ public class MainActivity extends Activity {
 			String number = cursor.getString(2);
 			String dateSentStr = cursor.getString(3);
 			String toName = getContactName(number, getContentResolver());
+			String body = cursor.getString(4);
 			Timestamp dateSent = new Timestamp(Long.parseLong(dateSentStr));
-			String dateTimeAction = sdf.format(dateSent);
+			String dateTimeAction = DATE_TIME_FORMAT.format(dateSent);
 			if(toName.equals(number)) {
 				toName = getString(R.string.unknown_contact);
 			}
@@ -173,6 +223,7 @@ public class MainActivity extends Activity {
 			data.setImageId(R.drawable.sms);
 			data.setText(text);
 			data.setName(toName);
+			data.setSmsBody(body);
 			data.setTimestamp(dateSent);
 			list.add(data);
 			cursor.moveToNext();
@@ -189,8 +240,9 @@ public class MainActivity extends Activity {
 		while (cursor.isAfterLast() == false) {
 			String address = cursor.getString(2);
 			String dateStr = cursor.getString(5);
+			String body = cursor.getString(6);
 			String newFromPerson = getContactName(address, getContentResolver());
-			String dateTimeAction = sdf.format(new Timestamp(Long.valueOf(dateStr)));
+			String dateTimeAction = DATE_TIME_FORMAT.format(new Timestamp(Long.valueOf(dateStr)));
 			if(newFromPerson.equals(address)) {
 				newFromPerson = getString(R.string.unknown_contact);
 			} 
@@ -204,6 +256,7 @@ public class MainActivity extends Activity {
 			String text = StringUtil.getString(getApplicationContext(), R.string.sms_receive_message, replacement);
 			data.setText(text);
 			data.setName(newFromPerson);
+			data.setSmsBody(body);
 			data.setTimestamp(new Timestamp(Long.parseLong(dateStr)));
 			list.add(data);
 			cursor.moveToNext();
@@ -241,7 +294,7 @@ public class MainActivity extends Activity {
 			String dateStr = mCallCursor.getString(4);
 			StringBuilder sb = new StringBuilder();
 			Map<String, String> replacement = new HashMap<String, String>();
-			String dateTimeAction = sdf.format(new Timestamp(Long.valueOf(dateStr)));
+			String dateTimeAction = DATE_TIME_FORMAT.format(new Timestamp(Long.valueOf(dateStr)));
 			if(cacheName == null || cacheName.equals("")) {
 				cacheName = getString(R.string.unknown_contact);
 			}
